@@ -1,34 +1,30 @@
 import { Service } from 'typedi';
-import { Connection, ConnectionManager, EntityTarget, Repository } from 'typeorm';
+import { Connection, createConnection, EntityTarget, Repository } from 'typeorm';
 import Config from '../app/config';
 import { User } from '../model/dao/user';
 
 @Service()
 class DatabaseConnection {
-    private readonly connectionManager: ConnectionManager = new ConnectionManager();
-    private connection: Connection;
+    private connection?: Connection;
 
-    constructor(private readonly config: Config) {
-        console.info('🧷 Preparing database connection...');
-        this.connection = this.connectionManager.create({
-            type: 'mysql',
-            host: config.databaseHost,
-            port: config.databasePort,
-            username: config.databaseUsername,
-            password: config.databasePassword,
-            database: config.databaseName,
-            entities: [User],
-        });
-    }
+    constructor(private readonly config: Config) {}
 
     isConnected(): boolean {
-        return this.connection.isConnected;
+        return !!this.connection;
     }
 
     async connect() {
-        if (!this.isConnected()) {
+        if (!this.connection) {
             console.info('📕 Connecting to database...');
-            await this.connection.connect();
+            this.connection = await createConnection({
+                type: 'mysql',
+                host: this.config.databaseHost,
+                port: this.config.databasePort,
+                username: this.config.databaseUsername,
+                password: this.config.databasePassword,
+                database: this.config.databaseName,
+                entities: [User],
+            });
             console.info('📗 Connected to database');
             console.info('📲 Synchronizing model...');
             await this.connection.synchronize();
@@ -37,8 +33,12 @@ class DatabaseConnection {
     }
 
     getRepository<T>(target: EntityTarget<T>): Repository<T> {
+        if (!this.connection) {
+            throw new Error('😲 Database is not connected');
+        }
+
         try {
-            return this.connectionManager.get().getRepository(target);
+            return this.connection.getRepository(target);
         } catch (error) {
             console.error(error);
             throw error;

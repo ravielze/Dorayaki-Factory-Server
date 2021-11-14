@@ -15,4 +15,10 @@ export class User extends BaseModel {
         length: 256,
     })
     password!: string;
+
+    constructor(username: string, password: string) {
+        super();
+        this.username = username;
+        this.password = password;
+    }
 }

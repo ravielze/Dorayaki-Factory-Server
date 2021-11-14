@@ -1,7 +1,9 @@
+import { Service } from 'typedi';
 import { BaseRepository } from '..';
 import DatabaseConnection from '../../database';
 import { User } from '../../model/dao/user';
 
+@Service()
 class UserRepository extends BaseRepository<User> {
     constructor(private readonly db: DatabaseConnection) {
         super(db.getRepository(User));

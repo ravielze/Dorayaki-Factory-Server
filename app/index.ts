@@ -1,30 +1,26 @@
 import express, { Application } from 'express';
 import Helmet from 'helmet';
-import { Service } from 'typedi';
+import Container, { Service } from 'typedi';
 import Controllers from '../controller';
 import 'reflect-metadata';
 import DatabaseConnection from '../database';
 import Config from './config';
+import { ErrorMiddleware } from './middleware';
 
 @Service()
 class App {
     expressApplication?: Application;
+    private controllers?: Controllers;
 
-    constructor(
-        private readonly controllers: Controllers,
-        private readonly database: DatabaseConnection,
-        private readonly config: Config
-    ) {
+    constructor(private readonly database: DatabaseConnection, private readonly config: Config) {
         console.info('🔈 Starting Application...');
         this.expressApplication = express();
-        this.expressApplication.use(express.json());
-        this.expressApplication.use(Helmet());
-        this.controllers = controllers;
     }
 
     private install() {
+        this.controllers = Container.get(Controllers);
         if (!this.controllers) {
-            return;
+            throw new Error('😵 Cannot Instantiate Controllers!');
         }
 
         console.info('🚄 Routing...');
@@ -32,6 +28,10 @@ class App {
         for (const c of controllers) {
             this.expressApplication?.use(c.basePath, c.router);
         }
+
+        this.expressApplication?.use(express.json());
+        this.expressApplication?.use(Helmet());
+        this.expressApplication?.use(ErrorMiddleware);
     }
 
     async run() {

@@ -1,18 +1,23 @@
-import { Service } from 'typedi';
+import Container, { Service } from 'typedi';
 import HealthController from './health';
-import Services from '../service';
-import { Controller } from './base';
+import { BaseController, Controller } from './base';
+import UserController from './user';
 
 @Service()
 class Controllers {
     healthController: Controller;
+    userController: Controller;
 
-    constructor(private readonly services: Services) {
-        this.healthController = new HealthController();
+    constructor() {
+        this.healthController = Container.get(HealthController);
+        this.userController = Container.get(UserController);
     }
 
     getAll(): Controller[] {
-        return [this.healthController];
+        const allControllers = Object.values(this).filter((item) => {
+            return item instanceof BaseController;
+        });
+        return allControllers;
     }
 }
 export default Controllers;
