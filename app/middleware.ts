@@ -4,13 +4,13 @@ import { StandardError } from '../common/error';
 import { CreateResponseError, CreateResponseStandardError } from '../model/dto';
 
 export const ErrorMiddleware = (error: Error, req: Request, res: Response, next: NextFunction) => {
-    console.log(error);
     if (error) {
         if (error instanceof StandardError) {
             res.status(error.code).json(CreateResponseStandardError(error));
         } else {
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(CreateResponseError(error));
         }
-        console.log(res.statusCode);
+        next(error);
     }
+    next();
 };
