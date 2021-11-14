@@ -1,4 +1,4 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, Index } from 'typeorm';
 import { BaseModel } from '.';
 
 @Entity()
@@ -6,8 +6,8 @@ export class User extends BaseModel {
     @Column({
         type: 'varchar',
         length: 128,
-        unique: true,
     })
+    @Index('idx_username', { unique: true })
     username!: string;
 
     @Column({
