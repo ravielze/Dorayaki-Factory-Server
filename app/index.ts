@@ -15,11 +15,11 @@ class App {
         private readonly database: DatabaseConnection,
         private readonly config: Config
     ) {
+        console.info('🔈 Starting Application...');
         this.expressApplication = express();
         this.expressApplication.use(express.json());
         this.expressApplication.use(Helmet());
         this.controllers = controllers;
-        this.install();
     }
 
     private install() {
@@ -27,16 +27,19 @@ class App {
             return;
         }
 
+        console.info('🚄 Routing...');
         const controllers = this.controllers.getAll();
         for (const c of controllers) {
             this.expressApplication?.use(c.basePath, c.router);
         }
     }
 
-    run() {
+    async run() {
+        await this.database.connect();
+        this.install();
         try {
             this.expressApplication?.listen(this.config.serverPort, (): void => {
-                console.log('Application started');
+                console.info('🔊 Application started');
             });
         } catch (error) {
             console.error(error);

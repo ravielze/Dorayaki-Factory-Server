@@ -1,6 +1,7 @@
 import { Service } from 'typedi';
-import { Connection, ConnectionManager } from 'typeorm';
+import { Connection, ConnectionManager, EntityTarget, Repository } from 'typeorm';
 import Config from '../app/config';
+import { User } from '../model/dao/user';
 
 @Service()
 class DatabaseConnection {
@@ -8,6 +9,7 @@ class DatabaseConnection {
     private connection: Connection;
 
     constructor(private readonly config: Config) {
+        console.info('🧷 Preparing database connection...');
         this.connection = this.connectionManager.create({
             type: 'mysql',
             host: config.databaseHost,
@@ -15,8 +17,8 @@ class DatabaseConnection {
             username: config.databaseUsername,
             password: config.databasePassword,
             database: config.databaseName,
+            entities: [User],
         });
-        this.connect();
     }
 
     isConnected(): boolean {
@@ -25,8 +27,21 @@ class DatabaseConnection {
 
     async connect() {
         if (!this.isConnected()) {
+            console.info('📕 Connecting to database...');
             await this.connection.connect();
-            console.log('connected!!!');
+            console.info('📗 Connected to database');
+            console.info('📲 Synchronizing model...');
+            await this.connection.synchronize();
+            console.info('📱 Model synchronized');
+        }
+    }
+
+    getRepository<T>(target: EntityTarget<T>): Repository<T> {
+        try {
+            return this.connectionManager.get().getRepository(target);
+        } catch (error) {
+            console.error(error);
+            throw error;
         }
     }
 }

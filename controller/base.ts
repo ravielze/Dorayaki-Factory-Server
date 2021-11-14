@@ -1,7 +1,9 @@
 import { Router } from 'express';
-
-class BaseController {
+export abstract class BaseController {
     public router: Router = Router();
 }
 
-export default BaseController;
+export interface Controller {
+    basePath: string;
+    router: Router;
+}

@@ -1,5 +1,6 @@
 enum ResponseStatus {
     OK = 'ok',
+    UNAUTHORIZED = 'unauthorized',
     ERROR = 'error',
 }
 

@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { CreateResponse, ResponseStatus } from '../../model/dto';
-import Controller from '../../model/interface/controller';
-import BaseController from '../base';
+import { BaseController, Controller } from '../base';
 
 class HealthController extends BaseController implements Controller {
     basePath = '/health';

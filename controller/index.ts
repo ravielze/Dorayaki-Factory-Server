@@ -1,12 +1,17 @@
 import { Service } from 'typedi';
 import HealthController from './health';
-import IController from '../model/interface/controller';
+import Services from '../service';
+import { Controller } from './base';
 
 @Service()
 class Controllers {
-    healthController: IController = new HealthController();
+    healthController: Controller;
 
-    getAll(): IController[] {
+    constructor(private readonly services: Services) {
+        this.healthController = new HealthController();
+    }
+
+    getAll(): Controller[] {
         return [this.healthController];
     }
 }
