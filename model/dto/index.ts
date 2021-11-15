@@ -1,5 +1,5 @@
-import { StatusCodes } from 'http-status-codes';
 import { StandardError } from '../../common/error';
+import { StatusCodes } from '../../common/http';
 
 enum ResponseStatus {
     OK = 'ok',

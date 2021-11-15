@@ -1,4 +1,4 @@
-import { StatusCodes } from 'http-status-codes';
+import { StatusCodes } from './http';
 
 export class StandardError extends Error {
     constructor(public details: string, public code: StatusCodes) {

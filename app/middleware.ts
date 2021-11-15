@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { StatusCodes } from 'http-status-codes';
 import { StandardError } from '../common/error';
+import { StatusCodes } from '../common/http';
 import { CreateResponseError, CreateResponseStandardError } from '../model/dto';
 
 export const ErrorMiddleware = (error: Error, req: Request, res: Response, next: NextFunction) => {
@@ -10,7 +10,7 @@ export const ErrorMiddleware = (error: Error, req: Request, res: Response, next:
         } else {
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(CreateResponseError(error));
         }
-        next(error);
+        return;
     }
     next();
 };
