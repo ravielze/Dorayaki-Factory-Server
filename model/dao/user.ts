@@ -1,8 +1,8 @@
 import { Column, Entity, Index } from 'typeorm';
 import { BaseModel } from '.';
 
-@Entity()
-export class User extends BaseModel {
+@Entity({ name: 'user' })
+export class UserDAO extends BaseModel {
     @Column({
         type: 'varchar',
         length: 128,

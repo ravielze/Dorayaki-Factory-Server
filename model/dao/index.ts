@@ -6,10 +6,7 @@ import {
     VersionColumn,
 } from 'typeorm';
 
-export abstract class BaseModel {
-    @PrimaryGeneratedColumn()
-    id!: number;
-
+export abstract class SimpleBaseModel {
     @CreateDateColumn({ name: 'created_at' })
     createdAt!: Date;
 
@@ -21,4 +18,9 @@ export abstract class BaseModel {
 
     @VersionColumn({ name: 'entity_version' })
     entityVersion!: number;
+}
+
+export abstract class BaseModel extends SimpleBaseModel {
+    @PrimaryGeneratedColumn()
+    id!: number;
 }

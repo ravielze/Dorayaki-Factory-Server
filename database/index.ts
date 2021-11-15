@@ -1,7 +1,11 @@
 import { Service } from 'typedi';
 import { Connection, createConnection, EntityTarget, Repository } from 'typeorm';
 import Config from '../app/config';
-import { User } from '../model/dao/user';
+import { DorayakiDAO } from '../model/dao/dorayaki';
+import { InboundDAO } from '../model/dao/inbound';
+import { IngredientDAO } from '../model/dao/ingredient';
+import { RecipeDAO } from '../model/dao/recipe';
+import { UserDAO } from '../model/dao/user';
 
 @Service()
 class DatabaseConnection {
@@ -23,7 +27,7 @@ class DatabaseConnection {
                 username: this.config.databaseUsername,
                 password: this.config.databasePassword,
                 database: this.config.databaseName,
-                entities: [User],
+                entities: [UserDAO, DorayakiDAO, InboundDAO, IngredientDAO, RecipeDAO],
             });
             console.info('📗 Connected to database');
             console.info('📲 Synchronizing model...');

@@ -1,15 +1,15 @@
 import { Service } from 'typedi';
 import { BaseRepository } from '..';
 import DatabaseConnection from '../../database';
-import { User } from '../../model/dao/user';
+import { UserDAO } from '../../model/dao/user';
 
 @Service()
-class UserRepository extends BaseRepository<User> {
+class UserRepository extends BaseRepository<UserDAO> {
     constructor(private readonly db: DatabaseConnection) {
-        super(db.getRepository(User));
+        super(db.getRepository(UserDAO));
     }
 
-    async getUsername(username: string): Promise<User | undefined> {
+    async getUsername(username: string): Promise<UserDAO | undefined> {
         return this.repo.findOne({
             where: {
                 username,
@@ -26,7 +26,7 @@ class UserRepository extends BaseRepository<User> {
         return count != 0;
     }
 
-    async createUser(item: User): Promise<User> {
+    async createUser(item: UserDAO): Promise<UserDAO> {
         return this.repo.save(item);
     }
 }
