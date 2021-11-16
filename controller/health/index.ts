@@ -9,7 +9,6 @@ class HealthController extends BaseController implements Controller {
 
     constructor() {
         super();
-        this.basePath = '/health';
         this.router.get('/', this.checkHealth.bind(this));
     }
 
