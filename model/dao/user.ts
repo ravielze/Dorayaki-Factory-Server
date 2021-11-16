@@ -5,10 +5,10 @@ import { BaseModel } from '.';
 export class UserDAO extends BaseModel {
     @Column({
         type: 'varchar',
-        length: 128,
+        length: 512,
     })
-    @Index('idx_username', { unique: true })
-    username!: string;
+    @Index('idx_email', { unique: true })
+    email!: string;
 
     @Column({
         type: 'varchar',
@@ -16,9 +16,9 @@ export class UserDAO extends BaseModel {
     })
     password!: string;
 
-    constructor(username: string, password: string) {
+    constructor(email: string, password: string) {
         super();
-        this.username = username;
+        this.email = email;
         this.password = password;
     }
 }
