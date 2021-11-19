@@ -9,18 +9,26 @@ class UserRepository extends BaseRepository<UserDAO> {
         super(db.getRepository(UserDAO));
     }
 
-    async getUsername(username: string): Promise<UserDAO | undefined> {
+    async getByEmail(email: string): Promise<UserDAO | undefined> {
         return this.repo.findOne({
             where: {
-                username,
+                email,
             },
         });
     }
 
-    async isUsernameExists(username: string): Promise<boolean> {
+    async getByID(id: number): Promise<UserDAO | undefined> {
+        return this.repo.findOne({
+            where: {
+                id,
+            },
+        });
+    }
+
+    async isEmailExists(email: string): Promise<boolean> {
         const count: number = await this.repo.count({
             where: {
-                username,
+                email,
             },
         });
         return count != 0;

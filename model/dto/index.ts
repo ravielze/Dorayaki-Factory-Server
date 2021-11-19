@@ -13,7 +13,10 @@ interface BaseResponse {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-function CreateResponse(status: ResponseStatus, data: any): BaseResponse {
+function CreateResponse(status: ResponseStatus, data?: any): BaseResponse {
+    if (!data) {
+        data = 'ok';
+    }
     return {
         status_code: status,
         data: data,

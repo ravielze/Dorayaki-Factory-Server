@@ -13,6 +13,10 @@
         "strictNullChecks": true,
         "allowUnreachableCode": false,
         "noImplicitReturns": true,
-        "strictBindCallApply": true
+        "strictBindCallApply": true,
+        "typeRoots": [
+            "@types",
+            "./node_modules/@types"
+        ]
     },
 }

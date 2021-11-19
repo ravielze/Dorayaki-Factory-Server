@@ -2,11 +2,14 @@ import { validate } from 'class-validator';
 import { NextFunction, Request, Response } from 'express';
 import { Service } from 'typedi';
 import { CreateResponse, ResponseStatus } from '../../model/dto';
-import { RegisterDTO } from '../../model/dto/user';
 import { CreateValidationErrorResponse } from '../../model/dto/validation';
 import UserService from '../../service/user';
 import { BaseController, Controller } from '../base';
 import AsyncHandler from 'express-async-handler';
+import { RegisterDTO } from '../../model/dto/user/register';
+import { ConvertUser } from '../../model/dto/user';
+import { LoginDTO } from '../../model/dto/user/login';
+import { UserControllerError } from './error';
 
 @Service()
 class UserController extends BaseController implements Controller {
@@ -15,29 +18,74 @@ class UserController extends BaseController implements Controller {
     constructor(private readonly service: UserService) {
         super();
         this.basePath = '/auth';
-        this.router.get('/', this.test.bind(this));
+        this.router.get('/', AsyncHandler(this.whoAmI.bind(this)));
         this.router.post('/register', AsyncHandler(this.register.bind(this)));
+        this.router.post('/login', AsyncHandler(this.login.bind(this)));
     }
 
-    test(req: Request, res: Response) {
-        res.status(200).json(CreateResponse(ResponseStatus.OK, 'test'));
+    async whoAmI(req: Request, res: Response) {
+        const jwtToken: string = this.getUnvalidatedToken(req);
+
+        const result = await this.service.whoAmI(jwtToken);
+        res.status(200).json(CreateResponse(ResponseStatus.OK, ConvertUser(result)));
     }
 
     async register(req: Request, res: Response) {
         const item: RegisterDTO = new RegisterDTO(req.body);
         CreateValidationErrorResponse(await validate(item));
-        await this.testWait();
-        res.status(200).json(CreateResponse(ResponseStatus.OK, item));
+
+        const result = await this.service.register(item);
+        res.status(200).json(CreateResponse(ResponseStatus.OK, ConvertUser(result)));
     }
 
-    async testWait() {
-        return new Promise<boolean>((res, rej) => {
+    async login(req: Request, res: Response) {
+        const item: LoginDTO = new LoginDTO(req.body);
+        CreateValidationErrorResponse(await validate(item));
+
+        const result = await this.service.login(item);
+        res.status(200).json(CreateResponse(ResponseStatus.OK, { token: result.token }));
+    }
+
+    getAuthMiddleware(): (req: Request, res: Response, next: NextFunction) => void {
+        const getUnvalidatedToken = this.getUnvalidatedToken.bind(this);
+        const whoAmIService = this.service.whoAmI.bind(this.service);
+        return async (req: Request, res: Response, next: NextFunction) => {
+            req.userLoggedIn = undefined;
             try {
-                setTimeout(() => res(true), 5000);
-            } catch {
-                rej(false);
+                const jwtToken: string = getUnvalidatedToken(req);
+                const user = await whoAmIService(jwtToken);
+                req.userLoggedIn = user;
+                next();
+            } catch (error) {
+                next(error);
             }
-        });
+        };
+    }
+
+    private getUnvalidatedToken(req: Request): string {
+        if (!req.headers.authorization) {
+            throw UserControllerError.BEARER_TOKEN_NOT_FOUND;
+        }
+
+        const authString: string = req.headers.authorization;
+
+        if (!(authString.startsWith('Bearer') || authString.trim().length > 0)) {
+            throw UserControllerError.BEARER_TOKEN_NOT_VALID;
+        }
+
+        const splitBearer: string[] = authString.split('Bearer ');
+        let token: string | undefined = undefined;
+        if (splitBearer.length == 2) {
+            token = splitBearer[1];
+        } else if (authString.startsWith('eyJh')) {
+            token = authString;
+        }
+
+        if (token) {
+            return token;
+        } else {
+            throw UserControllerError.BEARER_TOKEN_NOT_VALID;
+        }
     }
 }
 

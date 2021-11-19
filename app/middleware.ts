@@ -22,7 +22,7 @@ export const ErrorMiddleware = (error: Error, req: Request, res: Response, next:
     next();
 };
 
-export const RequestLogger = async (req: Request, res: Response, next: NextFunction) => {
+export const RequestLogger = (req: Request, res: Response, next: NextFunction) => {
     console.info(`📦 | ${new Date().toUTCString()} | ${MethodFormat(req.method)} | ${req.path}`);
     next();
 };

@@ -1,0 +1,4 @@
+const SALT_ROUND = 10;
+const JWT_ALGORITHM = 'HS256';
+
+export { SALT_ROUND, JWT_ALGORITHM };

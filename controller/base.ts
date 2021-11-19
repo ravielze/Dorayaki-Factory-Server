@@ -2,8 +2,8 @@ import { Router } from 'express';
 import { MethodFormat } from '../common/string';
 
 interface Route {
-    path: any;
-    method: any;
+    path: string;
+    method: string;
 }
 
 export abstract class BaseController {
@@ -19,7 +19,7 @@ export abstract class BaseController {
         this.router.stack.forEach((each) => {
             if (each.route && each.route.path) {
                 const path = each.route.path;
-                each.route.stack.forEach((endpoint: any) => {
+                each.route.stack.forEach((endpoint: { method: string }) => {
                     if (endpoint && endpoint.method) {
                         routes.push({
                             method: endpoint.method.toLowerCase(),
@@ -39,8 +39,8 @@ export abstract class BaseController {
                 delete: -1,
             };
 
-            var aVal: number = order[a.method];
-            var bVal: number = order[b.method];
+            let aVal: number = order[a.method];
+            let bVal: number = order[b.method];
             if (aVal === undefined) {
                 aVal = -2;
             }
@@ -55,8 +55,7 @@ export abstract class BaseController {
         });
 
         routes.forEach((item) => {
-            const m: string = item.method;
-            console.info(`\t\t${MethodFormat(m)} ${item.path}`);
+            console.info(`\t\t${MethodFormat(item.method)} ${item.path}`);
         });
     }
 }
