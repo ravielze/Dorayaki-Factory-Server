@@ -5,7 +5,7 @@ import Controllers from '../controller';
 import 'reflect-metadata';
 import DatabaseConnection from '../database';
 import Config from './config';
-import { ErrorMiddleware } from './middleware';
+import { ErrorMiddleware, RequestLogger } from './middleware';
 
 @Service()
 class App {
@@ -19,19 +19,28 @@ class App {
 
     private install() {
         this.controllers = Container.get(Controllers);
-        if (!this.controllers) {
+        if (!this.controllers || !this.expressApplication) {
             throw new Error('😵 Cannot Instantiate Controllers!');
         }
 
         console.info('🚄 Routing...');
+        this.expressApplication.use(express.json({ strict: true }));
+        this.expressApplication.use(Helmet());
+        this.expressApplication.use(RequestLogger);
         const controllers = this.controllers.getAll();
         for (const c of controllers) {
-            this.expressApplication?.use(c.basePath, c.router);
+            if (!c.basePath.startsWith('/')) {
+                continue;
+            }
+
+            console.info(
+                `\t🔗 ${c.constructor.name.replace('Controller', '')} Routes (/api${c.basePath})`
+            );
+            this.expressApplication.use(`/api${c.basePath}`, c.router);
+            c.infoRoutes();
         }
 
-        this.expressApplication?.use(express.json());
-        this.expressApplication?.use(Helmet());
-        this.expressApplication?.use(ErrorMiddleware);
+        this.expressApplication.use(ErrorMiddleware);
     }
 
     async run() {

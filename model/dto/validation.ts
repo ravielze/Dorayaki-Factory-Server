@@ -10,7 +10,7 @@ interface ValidationErrorResponse {
 }
 
 function CreateValidationErrorResponse(errors: ValidationError[]) {
-    if (!errors) {
+    if (!errors || errors.length == 0) {
         return;
     }
     const response: ValidationErrorResponse[] = errors.map((raw) => {

@@ -46,10 +46,33 @@ function CreateResponseStandardError(error: StandardError) {
     };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const BaseDTOConstructor = function (source: any, dest: any) {
+    const allowedKeys: string[] = Object.keys(dest);
+    Object.assign(dest, source);
+    Object.keys(dest)
+        .filter((key) => allowedKeys.indexOf(key) === -1)
+        .forEach((key) => {
+            const findAndRemoveKey = (key: string) => {
+                type keyType = keyof typeof dest;
+                for (const k in dest) {
+                    const keyCasted: keyType = k;
+                    if (k === key) {
+                        delete dest[keyCasted];
+                        return;
+                    }
+                }
+            };
+
+            findAndRemoveKey(key);
+        });
+};
+
 export {
     ResponseStatus,
     BaseResponse,
     CreateResponse,
     CreateResponseError,
     CreateResponseStandardError,
+    BaseDTOConstructor,
 };
