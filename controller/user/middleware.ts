@@ -1,4 +1,3 @@
-import { NextFunction } from 'express';
 import { Service } from 'typedi';
 import UserController from '.';
 

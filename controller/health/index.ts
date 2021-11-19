@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { Service } from 'typedi';
 import { CreateResponse, ResponseStatus } from '../../model/dto';
 import { BaseController, Controller } from '../base';
-import UserMiddleware from '../user/middleware';
 
 @Service()
 class HealthController extends BaseController implements Controller {

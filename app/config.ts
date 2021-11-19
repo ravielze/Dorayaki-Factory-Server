@@ -11,6 +11,8 @@ class Config {
     databasePassword: string;
     jwtSecret: string;
     jwtExpiresIn: string;
+    imgBBApiKey: string;
+    imgExpiration: string;
 
     constructor() {
         dotenv.config();
@@ -22,6 +24,11 @@ class Config {
         this.databasePassword = process.env.DB_PASSWORD || 'password';
         this.jwtSecret = process.env.JWT_SECRET || 'jwt_secr333t_wbd2';
         this.jwtExpiresIn = process.env.JWT_EXPIRES_IN || '1d';
+        this.imgBBApiKey = process.env.IMGBB_API_KEY || '';
+        this.imgExpiration = process.env.IMG_EXPIRATION || '86400';
+        if (!this.imgBBApiKey) {
+            throw new Error('Environment Variables: IMGBB_API_KEY is required.');
+        }
     }
 }
 
