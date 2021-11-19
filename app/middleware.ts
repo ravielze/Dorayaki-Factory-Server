@@ -7,6 +7,12 @@ export const ErrorMiddleware = (error: Error, req: Request, res: Response, next:
     if (error) {
         if (error instanceof StandardError) {
             res.status(error.code).json(CreateResponseStandardError(error));
+        } else if (error instanceof SyntaxError && error.message.includes('JSON at position')) {
+            res.status(StatusCodes.BAD_REQUEST).json(
+                CreateResponseStandardError(
+                    new StandardError(error.message, StatusCodes.BAD_REQUEST)
+                )
+            );
         } else {
             res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(CreateResponseError(error));
         }
