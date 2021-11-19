@@ -33,9 +33,7 @@ class App {
                 continue;
             }
 
-            console.info(
-                `\t🔗 ${c.constructor.name.replace('Controller', '')} Routes (/api${c.basePath})`
-            );
+            console.info(`\t🔗 ${c.constructor.name.replace('Controller', '')} Routes`);
             this.expressApplication.use(`/api${c.basePath}`, c.router);
             c.infoRoutes();
         }

@@ -55,7 +55,7 @@ export abstract class BaseController {
         });
 
         routes.forEach((item) => {
-            console.info(`\t\t${MethodFormat(item.method)} ${item.path}`);
+            console.info(`\t\t${MethodFormat(item.method)} /api${this.basePath}${item.path}`);
         });
     }
 }
