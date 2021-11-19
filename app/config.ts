@@ -13,6 +13,7 @@ class Config {
     jwtExpiresIn: string;
     imgBBApiKey: string;
     imgExpiration: string;
+    apiKey: string;
 
     constructor() {
         dotenv.config();
@@ -29,6 +30,7 @@ class Config {
         if (!this.imgBBApiKey) {
             throw new Error('Environment Variables: IMGBB_API_KEY is required.');
         }
+        this.apiKey = process.env.API_KEY || 'akucintasabuuun<3';
     }
 }
 

@@ -19,7 +19,9 @@ class FileService {
             .then((res) => {
                 return res.data;
             })
-            .catch(() => {});
+            .catch(() => {
+                return {};
+            });
 
         if (!response || !response.data || !response.data.image || !response.data.image.url) {
             throw new Error('failed to upload image to imgbb.com');

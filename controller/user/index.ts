@@ -82,7 +82,7 @@ class UserController extends BaseController implements Controller {
         }
 
         if (token) {
-            return token;
+            return token.trim();
         } else {
             throw UserControllerError.BEARER_TOKEN_NOT_VALID;
         }
