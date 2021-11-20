@@ -5,7 +5,7 @@ import Controllers from '../controller';
 import 'reflect-metadata';
 import DatabaseConnection from '../database';
 import Config from './config';
-import { ErrorMiddleware, RequestLogger } from './middleware';
+import { ErrorMiddleware, RequestResponseManipulator } from './middleware';
 
 @Service()
 class App {
@@ -26,7 +26,7 @@ class App {
         console.info('🚄 Routing...');
         this.expressApplication.use(express.json({ strict: true }));
         this.expressApplication.use(Helmet());
-        this.expressApplication.use(RequestLogger);
+        this.expressApplication.use(RequestResponseManipulator);
         const controllers = this.controllers.getAll();
         for (const c of controllers) {
             if (!c.basePath.startsWith('/')) {

@@ -16,4 +16,18 @@ function ParseInt(parsedString: string, property?: string): number {
     return result;
 }
 
-export { ParseInt };
+function ParseBoolean(parsedString?: string): boolean {
+    if (!parsedString) {
+        return false;
+    }
+
+    switch (parsedString.toLowerCase().trim()) {
+        case 'true':
+        case '1':
+        case 'yes':
+            return true;
+    }
+    return false;
+}
+
+export { ParseInt, ParseBoolean };

@@ -1,5 +1,6 @@
 import * as dotenv from 'dotenv';
 import { Service } from 'typedi';
+import { ParseBoolean } from '../common/parser';
 
 @Service()
 class Config {
@@ -14,6 +15,7 @@ class Config {
     imgBBApiKey: string;
     imgExpiration: string;
     apiKey: string;
+    databaseQueryLog: boolean;
 
     constructor() {
         dotenv.config();
@@ -31,6 +33,11 @@ class Config {
             throw new Error('Environment Variables: IMGBB_API_KEY is required.');
         }
         this.apiKey = process.env.API_KEY || 'akucintasabuuun<3';
+
+        if (!process.env.DB_QUERY_LOG) {
+            process.env.DB_QUERY_LOG = 'true';
+        }
+        this.databaseQueryLog = ParseBoolean(process.env.DB_QUERY_LOG);
     }
 }
 

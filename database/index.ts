@@ -1,11 +1,29 @@
 import { Service } from 'typedi';
-import { Connection, createConnection, EntityTarget, Repository } from 'typeorm';
+import {
+    Connection,
+    createConnection,
+    EntitySchema,
+    EntityTarget,
+    QueryRunner,
+    Repository,
+} from 'typeorm';
 import Config from '../app/config';
 import { DorayakiDAO } from '../model/dao/dorayaki';
 import { InboundDAO } from '../model/dao/inbound';
 import { IngredientDAO } from '../model/dao/ingredient';
 import { RecipeDAO } from '../model/dao/recipe';
 import { UserDAO } from '../model/dao/user';
+
+interface BaseConnectionOptions {
+    type: 'mysql' | 'mariadb' | 'postgres';
+    host: string;
+    port: number;
+    username: string;
+    password: string;
+    database: string;
+    // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-explicit-any
+    entities: (Function | string | EntitySchema<any>)[];
+}
 
 @Service()
 class DatabaseConnection {
@@ -20,7 +38,8 @@ class DatabaseConnection {
     async connect() {
         if (!this.connection) {
             console.info('📕 Connecting to database...');
-            this.connection = await createConnection({
+
+            const connectionOptions: BaseConnectionOptions = {
                 type: 'mysql',
                 host: this.config.databaseHost,
                 port: this.config.databasePort,
@@ -28,7 +47,16 @@ class DatabaseConnection {
                 password: this.config.databasePassword,
                 database: this.config.databaseName,
                 entities: [UserDAO, DorayakiDAO, InboundDAO, IngredientDAO, RecipeDAO],
-            });
+            };
+
+            if (this.config.databaseQueryLog) {
+                this.connection = await createConnection({
+                    ...connectionOptions,
+                    logging: ['migration', 'error', 'query'],
+                });
+            } else {
+                this.connection = await createConnection(connectionOptions);
+            }
             console.info('📗 Connected to database');
             console.info('📲 Synchronizing model...');
             await this.connection.synchronize();
