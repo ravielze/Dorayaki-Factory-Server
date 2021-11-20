@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import AsyncHandler from 'express-async-handler';
 import { Service } from 'typedi';
 import { CreateResponse, ResponseStatus } from '../../model/dto';
 import { BaseController, Controller } from '../base';
@@ -13,7 +14,7 @@ class HealthController extends BaseController implements Controller {
     }
 
     checkHealth(req: Request, res: Response) {
-        res.json(CreateResponse(ResponseStatus.OK, 'ok'));
+        res.return(CreateResponse(ResponseStatus.OK, 'ok'));
     }
 }
 

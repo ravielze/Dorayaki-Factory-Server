@@ -32,7 +32,7 @@ class FileController extends BaseController implements Controller {
 
         const fileData: string = file.data.toString('base64');
         const result = await this.service.uploadFile(fileData);
-        res.json(CreateResponse(ResponseStatus.OK, { url: result }));
+        res.return(CreateResponse(ResponseStatus.OK, { url: result }));
     }
 }
 

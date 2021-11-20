@@ -27,7 +27,7 @@ class UserController extends BaseController implements Controller {
         const jwtToken: string = this.getUnvalidatedToken(req);
 
         const result = await this.service.whoAmI(jwtToken);
-        res.status(200).json(CreateResponse(ResponseStatus.OK, ConvertUser(result)));
+        res.return(CreateResponse(ResponseStatus.OK, ConvertUser(result)));
     }
 
     async register(req: Request, res: Response) {
@@ -35,7 +35,7 @@ class UserController extends BaseController implements Controller {
         CreateValidationErrorResponse(await validate(item));
 
         const result = await this.service.register(item);
-        res.status(200).json(CreateResponse(ResponseStatus.OK, ConvertUser(result)));
+        res.return(CreateResponse(ResponseStatus.OK, ConvertUser(result)));
     }
 
     async login(req: Request, res: Response) {
@@ -43,7 +43,7 @@ class UserController extends BaseController implements Controller {
         CreateValidationErrorResponse(await validate(item));
 
         const result = await this.service.login(item);
-        res.status(200).json(CreateResponse(ResponseStatus.OK, { token: result.token }));
+        res.return(CreateResponse(ResponseStatus.OK, { token: result.token }));
     }
 
     getAuthMiddleware(): (req: Request, res: Response, next: NextFunction) => void {
