@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import AsyncHandler from 'express-async-handler';
 import { Service } from 'typedi';
 import { CreateResponse, ResponseStatus } from '../../model/dto';
 import { BaseController, Controller } from '../base';

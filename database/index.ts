@@ -1,12 +1,5 @@
 import { Service } from 'typedi';
-import {
-    Connection,
-    createConnection,
-    EntitySchema,
-    EntityTarget,
-    QueryRunner,
-    Repository,
-} from 'typeorm';
+import { Connection, createConnection, EntitySchema, EntityTarget, Repository } from 'typeorm';
 import Config from '../app/config';
 import { DorayakiDAO } from '../model/dao/dorayaki';
 import { InboundDAO } from '../model/dao/inbound';
