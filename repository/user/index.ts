@@ -1,32 +1,37 @@
 import { Service } from 'typedi';
-import { BaseRepository } from '..';
-import DatabaseConnection from '../../database';
 import { UserDAO } from '../../model/dao/user';
+import { Request } from 'express';
+import { Repository } from 'typeorm';
+import { BaseRepository } from '..';
 
 @Service()
 class UserRepository extends BaseRepository<UserDAO> {
-    constructor(private readonly db: DatabaseConnection) {
-        super(db.getRepository(UserDAO));
+    constructor() {
+        super();
     }
 
-    async getByEmail(email: string): Promise<UserDAO | undefined> {
-        return this.repo.findOne({
+    async getByEmail(request: Request, email: string): Promise<UserDAO | undefined> {
+        const repo: Repository<UserDAO> = await this.getRepository(request, UserDAO);
+
+        return repo.findOne({
             where: {
                 email,
             },
         });
     }
 
-    async getByID(id: number): Promise<UserDAO | undefined> {
-        return this.repo.findOne({
+    async getByID(request: Request, id: number): Promise<UserDAO | undefined> {
+        const repo: Repository<UserDAO> = await this.getRepository(request, UserDAO);
+        return repo.findOne({
             where: {
                 id,
             },
         });
     }
 
-    async isEmailExists(email: string): Promise<boolean> {
-        const count: number = await this.repo.count({
+    async isEmailExists(request: Request, email: string): Promise<boolean> {
+        const repo: Repository<UserDAO> = await this.getRepository(request, UserDAO);
+        const count: number = await repo.count({
             where: {
                 email,
             },
@@ -34,8 +39,9 @@ class UserRepository extends BaseRepository<UserDAO> {
         return count != 0;
     }
 
-    async createUser(item: UserDAO): Promise<UserDAO> {
-        return this.repo.save(item);
+    async createUser(request: Request, item: UserDAO): Promise<UserDAO> {
+        const repo: Repository<UserDAO> = await this.getRepository(request, UserDAO);
+        return repo.save(item);
     }
 }
 export default UserRepository;

@@ -1,5 +1,8 @@
-import { Repository } from 'typeorm';
+import { EntityTarget, Repository } from 'typeorm';
+import { Request } from 'express';
 
 export abstract class BaseRepository<T> {
-    constructor(protected readonly repo: Repository<T>) {}
+    protected getRepository(req: Request, item: EntityTarget<T>): Promise<Repository<T>> {
+        return req.transaction.repository(item);
+    }
 }
