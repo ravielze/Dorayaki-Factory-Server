@@ -48,6 +48,13 @@ class App {
             this.expressApplication?.listen(this.config.serverPort, (): void => {
                 console.info('🔊 Application started');
             });
+            process.on('SIGINT', () => {
+                process.exit();
+            });
+            process.on('exit', async () => {
+                await this.database.close();
+                console.info('🛡 Application stopped');
+            });
         } catch (error) {
             console.error(error);
         }

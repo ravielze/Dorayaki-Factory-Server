@@ -7,18 +7,21 @@ export class DorayakiDAO extends BaseModel {
     @Column({
         type: 'varchar',
         length: 512,
+        nullable: false,
     })
     name!: string;
 
     @Column({
         type: 'varchar',
         length: 2048,
+        nullable: false,
     })
     description!: string;
 
     @Column({
         type: 'varchar',
         length: 1024,
+        nullable: false,
     })
     picture!: string;
 

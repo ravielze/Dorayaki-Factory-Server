@@ -62,7 +62,6 @@ export class AccessManager {
     }
 
     async forSafety() {
-        console.info('a');
         if (!this.queryRunner && !this.isTransaction) {
             return;
         }

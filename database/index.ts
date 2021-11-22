@@ -28,7 +28,18 @@ class DatabaseConnection {
         return !!this.connection;
     }
 
-    async connect() {
+    async close() {
+        if (!this.connection) {
+            throw new Error('😲 Database is not connected');
+        }
+        await this.connection.close();
+    }
+
+    async connect(overrideLog?: boolean) {
+        if (!overrideLog) {
+            overrideLog = false;
+        }
+
         if (!this.connection) {
             console.info('📕 Connecting to database...');
 
@@ -42,7 +53,7 @@ class DatabaseConnection {
                 entities: [UserDAO, DorayakiDAO, InboundDAO, IngredientDAO, RecipeDAO],
             };
 
-            if (this.config.databaseQueryLog) {
+            if (this.config.databaseQueryLog || overrideLog) {
                 this.connection = await createConnection({
                     ...connectionOptions,
                     logging: ['migration', 'error', 'query'],
@@ -51,10 +62,18 @@ class DatabaseConnection {
                 this.connection = await createConnection(connectionOptions);
             }
             console.info('📗 Connected to database');
-            console.info('📲 Synchronizing model...');
-            await this.connection.synchronize();
-            console.info('📱 Model synchronized');
         }
+    }
+
+    async autoMigrate() {
+        if (!this.connection) {
+            throw new Error('😲 Database is not connected');
+        }
+
+        console.info('📲 Synchronizing model...');
+        await this.connection.synchronize();
+        console.info('📱 Model synchronized');
+        await this.connection.close();
     }
 
     getRepository<T>(target: EntityTarget<T>): Repository<T> {

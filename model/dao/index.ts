@@ -16,7 +16,11 @@ export abstract class SimpleBaseModel {
     @DeleteDateColumn({ name: 'deleted_at' })
     deletedAt!: Date;
 
-    @VersionColumn({ name: 'entity_version' })
+    @VersionColumn({
+        name: 'entity_version',
+        nullable: false,
+        default: 0,
+    })
     entityVersion!: number;
 }
 

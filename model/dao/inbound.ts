@@ -11,7 +11,7 @@ export class InboundDAO extends BaseModel {
     })
     note!: string;
 
-    @ManyToOne(() => DorayakiDAO)
+    @ManyToOne(() => DorayakiDAO, { nullable: false })
     dorayaki!: DorayakiDAO;
 
     @Column({

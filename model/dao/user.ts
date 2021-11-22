@@ -6,6 +6,7 @@ export class UserDAO extends BaseModel {
     @Column({
         type: 'varchar',
         length: 512,
+        nullable: false,
     })
     @Index('idx_email', { unique: true })
     email!: string;
@@ -13,6 +14,7 @@ export class UserDAO extends BaseModel {
     @Column({
         type: 'varchar',
         length: 256,
+        nullable: false,
     })
     password!: string;
 
