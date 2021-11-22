@@ -19,34 +19,30 @@ class IngredientRepository extends BaseRepository<IngredientDAO> {
         super();
     }
 
-    async createIngredient(request: Request, item: IngredientDAO): Promise<IngredientDAO> {
-        const repo: Repository<IngredientDAO> = await this.getRepository(request, IngredientDAO);
+    async createIngredient(req: Request, item: IngredientDAO): Promise<IngredientDAO> {
+        const repo: Repository<IngredientDAO> = await this.getRepository(req, IngredientDAO);
 
         return repo.save(item);
     }
 
-    async updateIngredients(
-        request: Request,
-        id: number,
-        item: QueryDeepPartialEntity<IngredientDAO>
-    ) {
-        const repo: Repository<IngredientDAO> = await this.getRepository(request, IngredientDAO);
+    async updateIngredients(req: Request, id: number, item: QueryDeepPartialEntity<IngredientDAO>) {
+        const repo: Repository<IngredientDAO> = await this.getRepository(req, IngredientDAO);
 
         await repo.update({ id }, item);
     }
 
-    async getIngredient(request: Request, id: number): Promise<IngredientDAO | undefined> {
-        const repo: Repository<IngredientDAO> = await this.getRepository(request, IngredientDAO);
+    async getIngredient(req: Request, id: number): Promise<IngredientDAO | undefined> {
+        const repo: Repository<IngredientDAO> = await this.getRepository(req, IngredientDAO);
 
         return repo.findOne(id);
     }
 
     async getAllIngredients(
-        request: Request,
+        req: Request,
         page: number,
         itemPerPage: number
     ): Promise<ArrayIngredients> {
-        const repo: Repository<IngredientDAO> = await this.getRepository(request, IngredientDAO);
+        const repo: Repository<IngredientDAO> = await this.getRepository(req, IngredientDAO);
 
         if (page <= 0) {
             page = 1;

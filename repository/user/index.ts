@@ -10,8 +10,8 @@ class UserRepository extends BaseRepository<UserDAO> {
         super();
     }
 
-    async getByEmail(request: Request, email: string): Promise<UserDAO | undefined> {
-        const repo: Repository<UserDAO> = await this.getRepository(request, UserDAO);
+    async getByEmail(req: Request, email: string): Promise<UserDAO | undefined> {
+        const repo: Repository<UserDAO> = await this.getRepository(req, UserDAO);
 
         return repo.findOne({
             where: {
@@ -20,8 +20,8 @@ class UserRepository extends BaseRepository<UserDAO> {
         });
     }
 
-    async getByID(request: Request, id: number): Promise<UserDAO | undefined> {
-        const repo: Repository<UserDAO> = await this.getRepository(request, UserDAO);
+    async getByID(req: Request, id: number): Promise<UserDAO | undefined> {
+        const repo: Repository<UserDAO> = await this.getRepository(req, UserDAO);
         return repo.findOne({
             where: {
                 id,
@@ -29,8 +29,8 @@ class UserRepository extends BaseRepository<UserDAO> {
         });
     }
 
-    async isEmailExists(request: Request, email: string): Promise<boolean> {
-        const repo: Repository<UserDAO> = await this.getRepository(request, UserDAO);
+    async isEmailExists(req: Request, email: string): Promise<boolean> {
+        const repo: Repository<UserDAO> = await this.getRepository(req, UserDAO);
         const count: number = await repo.count({
             where: {
                 email,
@@ -39,8 +39,8 @@ class UserRepository extends BaseRepository<UserDAO> {
         return count != 0;
     }
 
-    async createUser(request: Request, item: UserDAO): Promise<UserDAO> {
-        const repo: Repository<UserDAO> = await this.getRepository(request, UserDAO);
+    async createUser(req: Request, item: UserDAO): Promise<UserDAO> {
+        const repo: Repository<UserDAO> = await this.getRepository(req, UserDAO);
         return repo.save(item);
     }
 }

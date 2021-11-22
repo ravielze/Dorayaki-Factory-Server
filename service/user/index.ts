@@ -9,6 +9,7 @@ import Config from '../../app/config';
 import { TokenDTO, UserDTO } from '../../model/dto/user';
 import { UserServiceError } from './error';
 import { JWT_ALGORITHM, SALT_ROUND } from './config';
+import { Request } from 'express';
 
 @Service()
 class UserService {
@@ -28,22 +29,22 @@ class UserService {
         }
     }
 
-    async whoAmI(jwtToken: string): Promise<UserDAO> {
+    async whoAmI(req: Request, jwtToken: string): Promise<UserDAO> {
         const payload: JwtPayload = this.validateToken(jwtToken);
         const idPayload: number = payload.id;
         if (!idPayload) {
             throw UserServiceError.INCONSISTENT_DATA_CAUSE_KEY;
         }
 
-        const user: UserDAO | undefined = await this.repo.getByID(idPayload);
+        const user: UserDAO | undefined = await this.repo.getByID(req, idPayload);
         if (!user) {
             throw UserServiceError.INCONSISTENT_DATA_CAUSE_USER;
         }
         return user;
     }
 
-    async register(item: RegisterDTO): Promise<UserDAO> {
-        const isEmailExists: boolean = await this.repo.isEmailExists(item.email);
+    async register(req: Request, item: RegisterDTO): Promise<UserDAO> {
+        const isEmailExists: boolean = await this.repo.isEmailExists(req, item.email);
         if (isEmailExists) {
             throw UserServiceError.EMAIL_IS_ALREADY_REGISTERED;
         }
@@ -53,12 +54,12 @@ class UserService {
         const processedItem: UserDAO = item.ToDAO();
         processedItem.password = hashedPassword;
 
-        const result = await this.repo.createUser(processedItem);
+        const result = await this.repo.createUser(req, processedItem);
         return result;
     }
 
-    async login(item: LoginDTO): Promise<TokenDTO> {
-        const user: UserDAO | undefined = await this.repo.getByEmail(item.email);
+    async login(req: Request, item: LoginDTO): Promise<TokenDTO> {
+        const user: UserDAO | undefined = await this.repo.getByEmail(req, item.email);
         if (!user) {
             throw UserServiceError.LOGIN_FAILED;
         }

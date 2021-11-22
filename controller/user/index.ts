@@ -26,7 +26,7 @@ class UserController extends BaseController implements Controller {
     async whoAmI(req: Request, res: Response) {
         const jwtToken: string = this.getUnvalidatedToken(req);
 
-        const result = await this.service.whoAmI(jwtToken);
+        const result = await this.service.whoAmI(req, jwtToken);
         res.return(CreateResponse(ResponseStatus.OK, ConvertUser(result)));
     }
 
@@ -34,7 +34,7 @@ class UserController extends BaseController implements Controller {
         const item: RegisterDTO = new RegisterDTO(req.body);
         CreateValidationErrorResponse(await validate(item));
 
-        const result = await this.service.register(item);
+        const result = await this.service.register(req, item);
         res.return(CreateResponse(ResponseStatus.OK, ConvertUser(result)));
     }
 
@@ -42,7 +42,7 @@ class UserController extends BaseController implements Controller {
         const item: LoginDTO = new LoginDTO(req.body);
         CreateValidationErrorResponse(await validate(item));
 
-        const result = await this.service.login(item);
+        const result = await this.service.login(req, item);
         res.return(CreateResponse(ResponseStatus.OK, { token: result.token }));
     }
 
@@ -53,7 +53,7 @@ class UserController extends BaseController implements Controller {
             req.userLoggedIn = undefined;
             try {
                 const jwtToken: string = getUnvalidatedToken(req);
-                const user = await whoAmIService(jwtToken);
+                const user = await whoAmIService(req, jwtToken);
                 req.userLoggedIn = user;
                 next();
             } catch (error) {
