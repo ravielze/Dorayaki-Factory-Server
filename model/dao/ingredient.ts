@@ -34,4 +34,13 @@ export class IngredientDAO extends BaseModel {
 
     @OneToMany(() => RecipeDAO, (recipe) => recipe.ingredient)
     recipes!: Promise<RecipeDAO[]>;
+
+    constructor(name: string, description: string, picture: string, stock: number) {
+        super();
+        this.name = name;
+        this.description = description;
+        this.picture = picture;
+        this.stock = stock;
+        this.recipes = Promise.resolve<RecipeDAO[]>([]);
+    }
 }

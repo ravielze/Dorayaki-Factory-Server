@@ -4,14 +4,7 @@ import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity
 import { BaseRepository } from '..';
 import { Request } from 'express';
 import { IngredientDAO } from '../../model/dao/ingredient';
-
-export interface ArrayIngredients {
-    items: IngredientDAO[];
-    page: number;
-    maxPage: number;
-    itemPerPage: number;
-    totalItems: number;
-}
+import { ArrayIngredients } from '../../model/dto/ingredient';
 
 @Service()
 class IngredientRepository extends BaseRepository<IngredientDAO> {
