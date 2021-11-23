@@ -59,4 +59,5 @@ export {
     ArrayIngredientsDTO,
     ConvertMinifiedIngredient,
     MinifiedIngredientsDTO,
+    IngredientDTO,
 };

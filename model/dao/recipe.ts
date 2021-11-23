@@ -7,7 +7,6 @@ import 'reflect-metadata';
 @Entity({ name: 'recipe' })
 export class RecipeDAO extends SimpleBaseModel {
     @ManyToOne(() => DorayakiDAO, (dorayaki) => dorayaki.recipes, {
-        cascade: ['insert'],
         primary: true,
         nullable: false,
     })

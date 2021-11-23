@@ -30,7 +30,7 @@ class IngredientRepository extends BaseRepository<IngredientDAO> {
 
     async getAllIngredientsMinified(req: Request): Promise<MinifiedIngredientsDTO[]> {
         const repo: Repository<IngredientDAO> = await this.getRepository(req, IngredientDAO);
-        const result = await repo.find({ order: { name: 'ASC' } });
+        const result = await repo.find({ order: { name: 'ASC' }, select: ['id', 'name'] });
         return result.map((i) => ConvertMinifiedIngredient(i));
     }
 
