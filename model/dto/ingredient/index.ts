@@ -42,10 +42,21 @@ interface ArrayIngredientsDTO extends BaseArrayIngredients {
     items: IngredientDTO[];
 }
 
+interface MinifiedIngredientsDTO {
+    id: number;
+    name: string;
+}
+
+function ConvertMinifiedIngredient(item: IngredientDAO): MinifiedIngredientsDTO {
+    return { name: item.name, id: item.id };
+}
+
 export {
     ICreateIngredientDTO,
     IUpdateIngredientDTO,
     ConvertIngredient,
     ArrayIngredients,
     ArrayIngredientsDTO,
+    ConvertMinifiedIngredient,
+    MinifiedIngredientsDTO,
 };

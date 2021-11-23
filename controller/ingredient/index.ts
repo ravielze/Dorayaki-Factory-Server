@@ -24,6 +24,11 @@ class IngredientController extends BaseController implements Controller {
             this.mw.hasAPIKeyOrIsAuthorized(),
             AsyncHandler(this.getAll.bind(this))
         );
+        this.router.get(
+            '/minified',
+            this.mw.hasAPIKeyOrIsAuthorized(),
+            AsyncHandler(this.getAllMinified.bind(this))
+        );
         this.router.patch('/', this.mw.isAuthorized(), AsyncHandler(this.update.bind(this)));
     }
 
@@ -49,6 +54,11 @@ class IngredientController extends BaseController implements Controller {
             items: result.items.map((i) => ConvertIngredient(i)),
         };
         res.return(CreateResponse(ResponseStatus.OK, resulDto));
+    }
+
+    async getAllMinified(req: Request, res: Response) {
+        const result = await this.service.getIngredientsMinified(req);
+        res.return(CreateResponse(ResponseStatus.OK, result));
     }
 
     async update(req: Request, res: Response) {

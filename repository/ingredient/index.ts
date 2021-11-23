@@ -4,7 +4,11 @@ import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity
 import { BaseRepository } from '..';
 import { Request } from 'express';
 import { IngredientDAO } from '../../model/dao/ingredient';
-import { ArrayIngredients } from '../../model/dto/ingredient';
+import {
+    ArrayIngredients,
+    ConvertMinifiedIngredient,
+    MinifiedIngredientsDTO,
+} from '../../model/dto/ingredient';
 
 @Service()
 class IngredientRepository extends BaseRepository<IngredientDAO> {
@@ -22,6 +26,12 @@ class IngredientRepository extends BaseRepository<IngredientDAO> {
         const repo: Repository<IngredientDAO> = await this.getRepository(req, IngredientDAO);
 
         return repo.findOne(id);
+    }
+
+    async getAllIngredientsMinified(req: Request): Promise<MinifiedIngredientsDTO[]> {
+        const repo: Repository<IngredientDAO> = await this.getRepository(req, IngredientDAO);
+        const result = await repo.find({ order: { name: 'ASC' } });
+        return result.map((i) => ConvertMinifiedIngredient(i));
     }
 
     async getAllIngredients(
