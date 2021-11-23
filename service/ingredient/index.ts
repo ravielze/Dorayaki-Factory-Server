@@ -12,7 +12,7 @@ class IngredientService {
     constructor(private readonly repo: IngredientRepository) {}
 
     async createIngredient(req: Request, item: CreateIngredientDTO): Promise<IngredientDAO> {
-        return this.repo.createIngredient(req, item.ToDAO());
+        return this.repo.saveIngredient(req, item.ToDAO());
     }
 
     async updateIngredient(req: Request, item: UpdateIngredientDTO): Promise<void> {
@@ -21,7 +21,7 @@ class IngredientService {
             throw IngredientServiceError.INGREDIENT_ID_NOT_FOUND;
         }
 
-        await this.repo.updateIngredients(req, ingredient.id, item.ToDAO());
+        await this.repo.saveIngredient(req, item.ToDAOWithID(item.id));
     }
 
     async getIngredients(
@@ -31,8 +31,12 @@ class IngredientService {
     ): Promise<ArrayIngredients> {
         const result = await this.repo.getAllIngredients(req, page, itemPerPage);
 
-        if (page > result.maxPage) {
+        if (page != 1 && page > result.maxPage) {
             throw IngredientServiceError.PAGE_NOT_FOUND;
+        }
+
+        if (page == 1) {
+            result.maxPage = 1;
         }
 
         return result;

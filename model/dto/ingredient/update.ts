@@ -33,6 +33,12 @@ export class UpdateIngredientDTO implements IUpdateIngredientDTO {
         ParseAndOmit(item, this);
     }
 
+    ToDAOWithID(id: number): IngredientDAO {
+        const result = new IngredientDAO(this.name, this.description, this.picture, this.stock);
+        result.id = id;
+        return result;
+    }
+
     ToDAO(): IngredientDAO {
         return new IngredientDAO(this.name, this.description, this.picture, this.stock);
     }

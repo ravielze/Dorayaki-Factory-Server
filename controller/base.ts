@@ -54,7 +54,12 @@ export abstract class BaseController {
             return bVal - aVal;
         });
 
+        const printedPath: string[] = [];
         routes.forEach((item) => {
+            if (printedPath.indexOf(`${item.method}-${this.basePath}${item.path}`) !== -1) {
+                return;
+            }
+            printedPath.push(`${item.method}-${this.basePath}${item.path}`);
             console.info(`\t\t${MethodFormat(item.method)} /api${this.basePath}${item.path}`);
         });
     }

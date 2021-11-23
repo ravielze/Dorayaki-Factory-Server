@@ -32,7 +32,6 @@ class UserMiddleware {
                 }
             });
 
-            console.info(`${isAuthorizedOK} || ${hasAPIKeyOK}`);
             if (isAuthorizedOK || hasAPIKeyOK) {
                 return next();
             } else {

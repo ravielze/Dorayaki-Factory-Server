@@ -12,16 +12,10 @@ class IngredientRepository extends BaseRepository<IngredientDAO> {
         super();
     }
 
-    async createIngredient(req: Request, item: IngredientDAO): Promise<IngredientDAO> {
+    async saveIngredient(req: Request, item: IngredientDAO): Promise<IngredientDAO> {
         const repo: Repository<IngredientDAO> = await this.getRepository(req, IngredientDAO);
 
         return repo.save(item);
-    }
-
-    async updateIngredients(req: Request, id: number, item: QueryDeepPartialEntity<IngredientDAO>) {
-        const repo: Repository<IngredientDAO> = await this.getRepository(req, IngredientDAO);
-
-        await repo.update({ id }, item);
     }
 
     async getIngredient(req: Request, id: number): Promise<IngredientDAO | undefined> {
