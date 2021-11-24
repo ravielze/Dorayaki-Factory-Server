@@ -1,13 +1,12 @@
-import { validate } from 'class-validator';
 import { Request, Response } from 'express';
 import AsyncHandler from 'express-async-handler';
 import { Service } from 'typedi';
 import { ParseIntOrDefault } from '../../common/parser';
+import { validate } from '../../common/validation';
 import { CreateResponse, ResponseStatus } from '../../model/dto';
 import { ArrayIngredientsDTO, ConvertIngredient } from '../../model/dto/ingredient';
 import { CreateIngredientDTO } from '../../model/dto/ingredient/create';
 import { UpdateIngredientDTO } from '../../model/dto/ingredient/update';
-import { CreateValidationErrorResponse } from '../../model/dto/validation';
 import IngredientService from '../../service/ingredient';
 import { BaseController, Controller } from '../base';
 import UserMiddleware from '../user/middleware';
@@ -34,7 +33,7 @@ class IngredientController extends BaseController implements Controller {
 
     async create(req: Request, res: Response) {
         const item: CreateIngredientDTO = new CreateIngredientDTO(req.body);
-        CreateValidationErrorResponse(await validate(item));
+        await validate(item);
 
         const result = await this.service.createIngredient(req, item);
         res.return(CreateResponse(ResponseStatus.OK, ConvertIngredient(result)));
@@ -63,7 +62,7 @@ class IngredientController extends BaseController implements Controller {
 
     async update(req: Request, res: Response) {
         const item: UpdateIngredientDTO = new UpdateIngredientDTO(req.body);
-        CreateValidationErrorResponse(await validate(item));
+        await validate(item);
 
         await this.service.updateIngredient(req, item);
         res.return(CreateResponse(ResponseStatus.OK));

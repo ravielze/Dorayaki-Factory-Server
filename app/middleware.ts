@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
-import { StandardError } from '../common/error';
+import { StandardError, ValidationError } from '../common/error';
 import { StatusCodes } from '../common/http';
 import { HttpStatusFormat, MethodFormat, StringPadding } from '../common/string';
 import { AccessManager } from '../database/access';
 import { CreateResponseError, CreateResponseStandardError } from '../model/dto';
+import { CreateValidationErrorResponse } from '../model/dto/validation';
 
 export const ErrorMiddleware = async (
     error: Error,
@@ -14,6 +15,16 @@ export const ErrorMiddleware = async (
     if (error) {
         if (error instanceof StandardError) {
             res.returnError(error.code, CreateResponseStandardError(error));
+        } else if (error instanceof ValidationError) {
+            res.returnError(
+                StatusCodes.UNPROCESSABLE_ENTITY,
+                CreateResponseStandardError(
+                    new StandardError(
+                        CreateValidationErrorResponse(error.validationErrors),
+                        StatusCodes.UNPROCESSABLE_ENTITY
+                    )
+                )
+            );
         } else if (error instanceof SyntaxError && error.message.includes('JSON at position')) {
             res.returnError(
                 StatusCodes.BAD_REQUEST,

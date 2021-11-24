@@ -1,8 +1,6 @@
-import { validate } from 'class-validator';
 import { NextFunction, Request, Response } from 'express';
 import { Service } from 'typedi';
 import { CreateResponse, ResponseStatus } from '../../model/dto';
-import { CreateValidationErrorResponse } from '../../model/dto/validation';
 import UserService from '../../service/user';
 import { BaseController, Controller } from '../base';
 import AsyncHandler from 'express-async-handler';
@@ -10,6 +8,7 @@ import { RegisterDTO } from '../../model/dto/user/register';
 import { ConvertUser } from '../../model/dto/user';
 import { LoginDTO } from '../../model/dto/user/login';
 import { UserControllerError } from './error';
+import { validate } from '../../common/validation';
 
 @Service()
 class UserController extends BaseController implements Controller {
@@ -32,7 +31,7 @@ class UserController extends BaseController implements Controller {
 
     async register(req: Request, res: Response) {
         const item: RegisterDTO = new RegisterDTO(req.body);
-        CreateValidationErrorResponse(await validate(item));
+        await validate(item);
 
         const result = await this.service.register(req, item);
         res.return(CreateResponse(ResponseStatus.OK, ConvertUser(result)));
@@ -40,7 +39,7 @@ class UserController extends BaseController implements Controller {
 
     async login(req: Request, res: Response) {
         const item: LoginDTO = new LoginDTO(req.body);
-        CreateValidationErrorResponse(await validate(item));
+        await validate(item);
 
         const result = await this.service.login(req, item);
         res.return(CreateResponse(ResponseStatus.OK, { token: result.token }));

@@ -24,9 +24,9 @@ class App {
         }
 
         console.info('🚄 Routing...');
+        this.expressApplication.use(RequestResponseManipulator);
         this.expressApplication.use(express.json({ strict: true }));
         this.expressApplication.use(Helmet());
-        this.expressApplication.use(RequestResponseManipulator);
         const controllers = this.controllers.getAll();
         for (const c of controllers) {
             if (!c.basePath.startsWith('/')) {

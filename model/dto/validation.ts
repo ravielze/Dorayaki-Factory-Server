@@ -9,9 +9,9 @@ interface ValidationErrorResponse {
     };
 }
 
-function CreateValidationErrorResponse(errors: ValidationError[]) {
+function CreateValidationErrorResponse(errors: ValidationError[]): ValidationErrorResponse[] {
     if (!errors || errors.length == 0) {
-        return;
+        return [];
     }
     const response: ValidationErrorResponse[] = errors.map((raw) => {
         return {
@@ -19,7 +19,8 @@ function CreateValidationErrorResponse(errors: ValidationError[]) {
             details: raw.constraints,
         } as ValidationErrorResponse;
     });
-    throw new StandardError(response, StatusCodes.UNPROCESSABLE_ENTITY);
+    return response;
+    //throw new StandardError(response, StatusCodes.UNPROCESSABLE_ENTITY);
 }
 
 export { ValidationErrorResponse, CreateValidationErrorResponse };
