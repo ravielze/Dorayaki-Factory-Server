@@ -24,6 +24,21 @@ class IngredientService {
         await this.repo.saveIngredient(req, item.ToDAOWithID(item.id));
     }
 
+    async areIngredientIDsExist(req: Request, ids: number[]): Promise<[boolean, number[]]> {
+        const result: number[] = [];
+        const ingredients: MinifiedIngredientsDTO[] = await this.repo.getAllIngredientsMinified(
+            req
+        );
+
+        ids.forEach((each) => {
+            if (ingredients.findIndex((i) => i.id == each) === -1) {
+                result.push(each);
+            }
+        });
+
+        return [result.length == 0, result];
+    }
+
     async getIngredients(
         req: Request,
         page: number,

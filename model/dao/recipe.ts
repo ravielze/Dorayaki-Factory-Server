@@ -24,4 +24,11 @@ export class RecipeDAO extends SimpleBaseModel {
         nullable: false,
     })
     amount!: number;
+
+    constructor(dorayaki: DorayakiDAO, idIngredient: number, amount: number) {
+        super();
+        this.dorayaki = dorayaki;
+        this.ingredient = IngredientDAO.FromID(idIngredient);
+        this.amount = amount;
+    }
 }

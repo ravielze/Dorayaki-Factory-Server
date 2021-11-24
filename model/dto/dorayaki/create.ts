@@ -1,7 +1,5 @@
 import {
     ArrayMinSize,
-    IsArray,
-    isArray,
     IsAscii,
     IsInt,
     IsUrl,
@@ -9,22 +7,25 @@ import {
     MaxLength,
     Min,
     MinLength,
-    ValidateNested,
 } from 'class-validator';
 import { BaseDTOConstructor as ParseAndOmit } from '..';
 import { ICreateDorayakiDTO, ICreateRecipeDTO } from '.';
 import { DorayakiDAO } from '../../dao/dorayaki';
 
 export class CreateRecipeDTO implements ICreateRecipeDTO {
-    @Min(0, { message: 'ID minimum value is 0.' })
+    @Min(1, { message: 'ID minimum value is 1.' })
     @Max(2 ** 32, { message: 'ID reached maximum amount.' })
     @IsInt({ message: 'ID can not be floating point' })
     id = 0;
 
-    @Min(0, { message: 'Amount minimum value is 0.' })
+    @Min(1, { message: 'Amount minimum value is 1.' })
     @Max(2 ** 16, { message: 'Amount reached maximum amount.' })
     @IsInt({ message: 'Amount can not be floating point' })
     amount = 0;
+
+    constructor(item: ICreateRecipeDTO) {
+        ParseAndOmit(item, this);
+    }
 }
 
 export class CreateDorayakiDTO implements ICreateDorayakiDTO {
@@ -43,12 +44,12 @@ export class CreateDorayakiDTO implements ICreateDorayakiDTO {
     @IsUrl(undefined, { message: 'Picture URL is not in URL format.' })
     picture = '';
 
-    @ValidateNested({ each: true })
     @ArrayMinSize(1, { message: 'Dorayaki must have at least one ingredient for the recipe.' })
     recipes: CreateRecipeDTO[] = [];
 
     constructor(item: ICreateDorayakiDTO) {
         ParseAndOmit(item, this);
+        this.recipes = this.recipes.map((i) => new CreateRecipeDTO(i));
     }
 
     ToDAO(): DorayakiDAO {

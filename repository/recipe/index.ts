@@ -3,7 +3,6 @@ import { Repository } from 'typeorm';
 import { BaseRepository } from '..';
 import { Request } from 'express';
 import { RecipeDAO } from '../../model/dao/recipe';
-import { DorayakiDAO } from '../../model/dao/dorayaki';
 
 @Service()
 class RecipeRepository extends BaseRepository<RecipeDAO> {
@@ -11,10 +10,10 @@ class RecipeRepository extends BaseRepository<RecipeDAO> {
         super();
     }
 
-    async saveRecipe(req: Request, item: RecipeDAO): Promise<RecipeDAO> {
+    async saveRecipes(req: Request, items: RecipeDAO[]): Promise<RecipeDAO[]> {
         const repo: Repository<RecipeDAO> = await this.getRepository(req, RecipeDAO);
 
-        return repo.save(item);
+        return repo.save(items);
     }
 }
 export default RecipeRepository;

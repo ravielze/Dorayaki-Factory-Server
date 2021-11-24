@@ -1,6 +1,5 @@
 import { Service } from 'typedi';
 import { Repository } from 'typeorm';
-import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { BaseRepository } from '..';
 import { Request } from 'express';
 import { IngredientDAO } from '../../model/dao/ingredient';
