@@ -5,6 +5,7 @@ import UserController from './user';
 import FileController from './file';
 import IngredientController from './ingredient';
 import DorayakiController from './dorayaki';
+import InboundController from './inbound';
 
 @Service()
 class Controllers {
@@ -13,6 +14,7 @@ class Controllers {
     fileController: Controller;
     ingredientController: Controller;
     dorayakiController: Controller;
+    inboundController: Controller;
 
     constructor() {
         this.healthController = Container.get(HealthController);
@@ -20,6 +22,7 @@ class Controllers {
         this.fileController = Container.get(FileController);
         this.ingredientController = Container.get(IngredientController);
         this.dorayakiController = Container.get(DorayakiController);
+        this.inboundController = Container.get(InboundController);
     }
 
     getAll(): Controller[] {
