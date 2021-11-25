@@ -12,19 +12,21 @@ interface IUpdateIngredientDTO extends ICreateIngredientDTO {
 }
 
 interface IngredientDTO {
-    name: string;
-    description: string;
-    picture: string;
-    stock: number;
+  name: string
+  description: string
+  picture: string
+  stock: number
+  id: number
 }
 
 function ConvertIngredient(item: IngredientDAO): IngredientDTO {
-    return {
-        name: item.name,
-        description: item.description,
-        picture: item.picture,
-        stock: item.stock,
-    };
+  return {
+    name: item.name,
+    description: item.description,
+    picture: item.picture,
+    stock: item.stock,
+    id: item.id,
+  }
 }
 
 interface MinifiedIngredientsDTO {
