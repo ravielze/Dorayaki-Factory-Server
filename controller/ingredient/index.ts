@@ -4,7 +4,8 @@ import { Service } from 'typedi';
 import { ParseIntOrDefault } from '../../common/parser';
 import { validate } from '../../common/validation';
 import { CreateResponse, ResponseStatus } from '../../model/dto';
-import { ArrayIngredientsDTO, ConvertIngredient } from '../../model/dto/ingredient';
+import { PaginationResult } from '../../model/dto/abstract';
+import { ConvertIngredient, IngredientDTO } from '../../model/dto/ingredient';
 import { CreateIngredientDTO } from '../../model/dto/ingredient/create';
 import { UpdateIngredientDTO } from '../../model/dto/ingredient/update';
 import IngredientService from '../../service/ingredient';
@@ -48,11 +49,11 @@ class IngredientController extends BaseController implements Controller {
         );
 
         const result = await this.service.getIngredients(req, page, itemPerPage);
-        const resulDto: ArrayIngredientsDTO = {
+        const resultDto: PaginationResult<IngredientDTO> = {
             ...result,
             items: result.items.map((i) => ConvertIngredient(i)),
         };
-        res.return(CreateResponse(ResponseStatus.OK, resulDto));
+        res.return(CreateResponse(ResponseStatus.OK, resultDto));
     }
 
     async getAllMinified(req: Request, res: Response) {

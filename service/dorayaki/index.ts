@@ -2,6 +2,7 @@ import { Request } from 'express';
 import { Service } from 'typedi';
 import { DorayakiDAO } from '../../model/dao/dorayaki';
 import { RecipeDAO } from '../../model/dao/recipe';
+import { PaginationResult } from '../../model/dto/abstract';
 import { CreateDorayakiDTO } from '../../model/dto/dorayaki/create';
 import DorayakiRepository from '../../repository/dorayaki';
 import RecipeRepository from '../../repository/recipe';
@@ -16,7 +17,7 @@ class DorayakiService {
         private readonly ingrService: IngredientService
     ) {}
 
-    async createDorayakiRecipe(req: Request, item: CreateDorayakiDTO): Promise<RecipeDAO[]> {
+    async createDorayakiRecipe(req: Request, item: CreateDorayakiDTO): Promise<DorayakiDAO> {
         if (!req.transaction.isTransaction) {
             throw new Error('Unsafe service calls. Expected using transaction.');
         }
@@ -31,8 +32,33 @@ class DorayakiService {
         const recipes: RecipeDAO[] = item.recipes.map(
             (r) => new RecipeDAO(dorayaki, r.id, r.amount)
         );
+        console.info(item.recipes);
 
-        const result: RecipeDAO[] = await this.recipeRepo.saveRecipes(req, recipes);
+        await this.recipeRepo.saveRecipes(req, recipes);
+
+        const result: DorayakiDAO | undefined = await this.repo.getDorayaki(req, dorayaki.id);
+        if (!result) {
+            throw new Error('Impossible steps detected.');
+        }
+
+        return result;
+    }
+
+    async getDorayakis(
+        req: Request,
+        page: number,
+        itemPerPage: number
+    ): Promise<PaginationResult<DorayakiDAO>> {
+        const result = await this.repo.getDorayakis(req, page, itemPerPage);
+
+        if (page != 1 && page > result.maxPage) {
+            throw DorayakiServiceError.PAGE_NOT_FOUND;
+        }
+
+        if (result.maxPage < 1) {
+            result.maxPage = 1;
+        }
+
         return result;
     }
 }

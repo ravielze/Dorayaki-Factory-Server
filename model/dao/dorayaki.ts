@@ -26,13 +26,12 @@ export class DorayakiDAO extends BaseModel {
     picture!: string;
 
     @OneToMany(() => RecipeDAO, (recipe) => recipe.dorayaki)
-    recipes!: Promise<RecipeDAO[]>;
+    recipes!: RecipeDAO[];
 
     constructor(name: string, description: string, picture: string) {
         super();
         this.name = name;
         this.description = description;
         this.picture = picture;
-        this.recipes = Promise.resolve<RecipeDAO[]>([]);
     }
 }

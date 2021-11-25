@@ -10,10 +10,10 @@ class RecipeRepository extends BaseRepository<RecipeDAO> {
         super();
     }
 
-    async saveRecipes(req: Request, items: RecipeDAO[]): Promise<RecipeDAO[]> {
+    async saveRecipes(req: Request, items: RecipeDAO[]) {
         const repo: Repository<RecipeDAO> = await this.getRepository(req, RecipeDAO);
 
-        return repo.save(items);
+        await repo.save(items);
     }
 }
 export default RecipeRepository;

@@ -55,4 +55,16 @@ export class CreateDorayakiDTO implements ICreateDorayakiDTO {
     ToDAO(): DorayakiDAO {
         return new DorayakiDAO(this.name, this.description, this.picture);
     }
+
+    RemoveDuplicateIngredientsID(): CreateDorayakiDTO {
+        const result: CreateRecipeDTO[] = [];
+        this.recipes.forEach((i) => {
+            if (result.filter((j) => i.id == j.id).length != 0) {
+                return;
+            }
+            result.push(i);
+        });
+        this.recipes = result;
+        return this;
+    }
 }

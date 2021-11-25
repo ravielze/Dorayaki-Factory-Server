@@ -10,8 +10,8 @@ export async function validate(item: any) {
     throw new ValidationError(errs);
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function validateArray(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     item: any,
     transform: (err: rawValidationError, index?: number) => rawValidationError
 ) {

@@ -27,21 +27,6 @@ function ConvertIngredient(item: IngredientDAO): IngredientDTO {
     };
 }
 
-interface BaseArrayIngredients {
-    page: number;
-    maxPage: number;
-    itemPerPage: number;
-    totalItems: number;
-}
-
-interface ArrayIngredients extends BaseArrayIngredients {
-    items: IngredientDAO[];
-}
-
-interface ArrayIngredientsDTO extends BaseArrayIngredients {
-    items: IngredientDTO[];
-}
-
 interface MinifiedIngredientsDTO {
     id: number;
     name: string;
@@ -55,8 +40,6 @@ export {
     ICreateIngredientDTO,
     IUpdateIngredientDTO,
     ConvertIngredient,
-    ArrayIngredients,
-    ArrayIngredientsDTO,
     ConvertMinifiedIngredient,
     MinifiedIngredientsDTO,
     IngredientDTO,

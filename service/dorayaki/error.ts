@@ -6,4 +6,5 @@ export const DorayakiServiceError = {
         'Recipe contain invalid ingredient(s) id.',
         StatusCodes.BAD_REQUEST
     ),
+    PAGE_NOT_FOUND: new StandardError('Page not found.', StatusCodes.BAD_REQUEST),
 };

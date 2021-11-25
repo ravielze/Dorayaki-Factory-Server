@@ -36,14 +36,12 @@ function ConvertRecipe(item: RecipeDAO): RecipeDTO {
     };
 }
 
-async function ConvertDorayaki(item: DorayakiDAO): Promise<DorayakiDTO> {
-    const recipesDAO = await item.recipes;
-
+function ConvertDorayaki(item: DorayakiDAO): DorayakiDTO {
     return {
         name: item.name,
         description: item.description,
         picture: item.picture,
-        recipes: recipesDAO.map((i) => ConvertRecipe(i)),
+        recipes: item.recipes.map((i) => ConvertRecipe(i)),
     };
 }
 

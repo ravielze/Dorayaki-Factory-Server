@@ -3,11 +3,8 @@ import { Repository } from 'typeorm';
 import { BaseRepository } from '..';
 import { Request } from 'express';
 import { IngredientDAO } from '../../model/dao/ingredient';
-import {
-    ArrayIngredients,
-    ConvertMinifiedIngredient,
-    MinifiedIngredientsDTO,
-} from '../../model/dto/ingredient';
+import { ConvertMinifiedIngredient, MinifiedIngredientsDTO } from '../../model/dto/ingredient';
+import { PaginationResult } from '../../model/dto/abstract';
 
 @Service()
 class IngredientRepository extends BaseRepository<IngredientDAO> {
@@ -37,42 +34,10 @@ class IngredientRepository extends BaseRepository<IngredientDAO> {
         req: Request,
         page: number,
         itemPerPage: number
-    ): Promise<ArrayIngredients> {
+    ): Promise<PaginationResult<IngredientDAO>> {
         const repo: Repository<IngredientDAO> = await this.getRepository(req, IngredientDAO);
 
-        if (page <= 0) {
-            page = 1;
-        }
-        if (itemPerPage < 5) {
-            itemPerPage = 5;
-        }
-
-        if (itemPerPage > 25) {
-            itemPerPage = 25;
-        }
-
-        const totalItems: number = await repo.count({});
-        const maxPage = Math.ceil(totalItems / itemPerPage);
-
-        let items: IngredientDAO[] = [];
-        if (totalItems > 0) {
-            const take = itemPerPage;
-            const skip = (page - 1) * take;
-            const result = await repo.find({
-                skip,
-                take,
-                order: { name: 'ASC' },
-            });
-            items = result;
-        }
-
-        return {
-            page,
-            maxPage,
-            itemPerPage,
-            totalItems,
-            items,
-        };
+        return this.getAll(repo, page, itemPerPage, { order: { name: 'ASC' } });
     }
 }
 export default IngredientRepository;

@@ -1,6 +1,4 @@
 import { ValidationError } from 'class-validator';
-import { StandardError } from '../../common/error';
-import { StatusCodes } from '../../common/http';
 
 interface ValidationErrorResponse {
     property: string;

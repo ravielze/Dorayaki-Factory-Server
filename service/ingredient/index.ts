@@ -1,7 +1,8 @@
 import { Request } from 'express';
 import { Service } from 'typedi';
 import { IngredientDAO } from '../../model/dao/ingredient';
-import { ArrayIngredients, MinifiedIngredientsDTO } from '../../model/dto/ingredient';
+import { PaginationResult } from '../../model/dto/abstract';
+import { MinifiedIngredientsDTO } from '../../model/dto/ingredient';
 import { CreateIngredientDTO } from '../../model/dto/ingredient/create';
 import { UpdateIngredientDTO } from '../../model/dto/ingredient/update';
 import IngredientRepository from '../../repository/ingredient';
@@ -43,14 +44,14 @@ class IngredientService {
         req: Request,
         page: number,
         itemPerPage: number
-    ): Promise<ArrayIngredients> {
+    ): Promise<PaginationResult<IngredientDAO>> {
         const result = await this.repo.getAllIngredients(req, page, itemPerPage);
 
         if (page != 1 && page > result.maxPage) {
             throw IngredientServiceError.PAGE_NOT_FOUND;
         }
 
-        if (page == 1) {
+        if (result.maxPage < 1) {
             result.maxPage = 1;
         }
 

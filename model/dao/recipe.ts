@@ -15,6 +15,7 @@ export class RecipeDAO extends SimpleBaseModel {
     @ManyToOne(() => IngredientDAO, (ingredient) => ingredient.recipes, {
         primary: true,
         nullable: false,
+        eager: true,
     })
     ingredient!: IngredientDAO;
 
