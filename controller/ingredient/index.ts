@@ -29,7 +29,11 @@ class IngredientController extends BaseController implements Controller {
             this.mw.hasAPIKeyOrIsAuthorized(),
             AsyncHandler(this.getAllMinified.bind(this))
         );
-        this.router.patch('/', this.mw.isAuthorized(), AsyncHandler(this.update.bind(this)));
+        this.router.put(
+          "/",
+          this.mw.isAuthorized(),
+          AsyncHandler(this.update.bind(this))
+        )
     }
 
     async create(req: Request, res: Response) {
