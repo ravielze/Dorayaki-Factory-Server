@@ -39,9 +39,9 @@ class DorayakiController extends BaseController implements Controller {
             return each;
         });
 
-        req.transaction.use();
+        await req.transaction.use();
         const result = await this.service.createDorayakiRecipe(req, item);
-        req.transaction.commit();
+        await req.transaction.commit();
 
         res.json(CreateResponse(ResponseStatus.OK, ConvertDorayaki(result)));
     }

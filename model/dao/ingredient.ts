@@ -41,7 +41,6 @@ export class IngredientDAO extends BaseModel {
         this.description = description;
         this.picture = picture;
         this.stock = stock;
-        this.recipes = Promise.resolve<RecipeDAO[]>([]);
     }
 
     static FromID(id: number): IngredientDAO {

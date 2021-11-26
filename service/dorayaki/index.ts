@@ -32,16 +32,15 @@ class DorayakiService {
         const recipes: RecipeDAO[] = item.recipes.map(
             (r) => new RecipeDAO(dorayaki, r.id, r.amount)
         );
-        console.info(item.recipes);
 
         await this.recipeRepo.saveRecipes(req, recipes);
+        dorayaki.recipes = recipes;
 
-        const result: DorayakiDAO | undefined = await this.repo.getDorayaki(req, dorayaki.id);
-        if (!result) {
-            throw new Error('Impossible steps detected.');
-        }
+        return dorayaki;
+    }
 
-        return result;
+    async getDorayaki(req: Request, id: number): Promise<DorayakiDAO | undefined> {
+        return this.repo.getDorayakiWithIngredients(req, id);
     }
 
     async getDorayakis(

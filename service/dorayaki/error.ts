@@ -7,4 +7,5 @@ export const DorayakiServiceError = {
         StatusCodes.BAD_REQUEST
     ),
     PAGE_NOT_FOUND: new StandardError('Page not found.', StatusCodes.BAD_REQUEST),
+    DORAYAKI_ID_NOT_FOUND: new StandardError('Dorayaki ID not found.', StatusCodes.BAD_REQUEST),
 };

@@ -34,10 +34,9 @@ class InboundRepository extends BaseRepository<InboundDAO> {
         });
     }
 
-    async receive(req: Request, id: number): Promise<number> {
+    async updateStatus(req: Request, id: number, status: InboundStatus) {
         const repo: Repository<InboundDAO> = await this.getRepository(req, InboundDAO);
-        await repo.update(id, { status: InboundStatus.RECEIVED });
-        return id;
+        await repo.update(id, { status });
     }
 }
 export default InboundRepository;

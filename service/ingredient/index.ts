@@ -16,6 +16,10 @@ class IngredientService {
         return this.repo.saveIngredient(req, item.ToDAO());
     }
 
+    async saveIngredients(req: Request, items: IngredientDAO[]) {
+        await this.repo.saveIngredients(req, items);
+    }
+
     async updateIngredient(req: Request, item: UpdateIngredientDTO): Promise<void> {
         const ingredient: IngredientDAO | undefined = await this.repo.getIngredient(req, item.id);
         if (!ingredient) {

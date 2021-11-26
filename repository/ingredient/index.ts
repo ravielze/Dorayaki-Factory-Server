@@ -18,6 +18,12 @@ class IngredientRepository extends BaseRepository<IngredientDAO> {
         return repo.save(item);
     }
 
+    async saveIngredients(req: Request, items: IngredientDAO[]): Promise<IngredientDAO[]> {
+        const repo: Repository<IngredientDAO> = await this.getRepository(req, IngredientDAO);
+
+        return repo.save(items);
+    }
+
     async getIngredient(req: Request, id: number): Promise<IngredientDAO | undefined> {
         const repo: Repository<IngredientDAO> = await this.getRepository(req, IngredientDAO);
 

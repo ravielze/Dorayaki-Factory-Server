@@ -33,10 +33,8 @@ class InboundController extends BaseController implements Controller {
             this.mw.hasAPIKeyOrIsAuthorized(),
             AsyncHandler(this.receive.bind(this))
         );
-    }
-
-    async something(req: Request, res: Response) {
-        res.json(CreateResponse(ResponseStatus.OK));
+        this.router.post('/reject/:id', this.mw.hasAPIKey(), AsyncHandler(this.reject.bind(this)));
+        this.router.post('/accept/:id', this.mw.hasAPIKey(), AsyncHandler(this.accept.bind(this)));
     }
 
     async createInbound(req: Request, res: Response) {
@@ -66,6 +64,25 @@ class InboundController extends BaseController implements Controller {
         const id: number = ParseInt(req.params.id as string | undefined, 'InboundID');
 
         const result = await this.service.updateStatus(req, id, InboundStatus.RECEIVED);
+
+        res.return(CreateResponse(ResponseStatus.OK, ConvertInbound(result)));
+    }
+
+    async reject(req: Request, res: Response) {
+        const id: number = ParseInt(req.params.id as string | undefined, 'InboundID');
+
+        const result = await this.service.updateStatus(req, id, InboundStatus.REJECTED);
+
+        res.return(CreateResponse(ResponseStatus.OK, ConvertInbound(result)));
+    }
+
+    async accept(req: Request, res: Response) {
+        const id: number = ParseInt(req.params.id as string | undefined, 'InboundID');
+
+        await req.transaction.use();
+        const result = await this.service.updateStatus(req, id, InboundStatus.ACCEPTED);
+        await this.service.fulfillRequest(req, result);
+        await req.transaction.commit();
 
         res.return(CreateResponse(ResponseStatus.OK, ConvertInbound(result)));
     }
