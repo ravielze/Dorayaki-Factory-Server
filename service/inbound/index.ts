@@ -11,6 +11,7 @@ import DorayakiService from '../dorayaki';
 import { DorayakiServiceError } from '../dorayaki/error';
 import IngredientService from '../ingredient';
 import { IngredientServiceError } from '../ingredient/error';
+import MailService from '../mail';
 import { InboundServiceError } from './error';
 
 @Service()
@@ -18,9 +19,15 @@ class InboundService {
     constructor(
         private readonly repo: InboundRepository,
         private readonly doraService: DorayakiService,
-        private readonly ingrService: IngredientService
+        private readonly ingrService: IngredientService,
+        private readonly mailService: MailService
     ) {}
     async createInbound(req: Request, item: CreateInboundDTO): Promise<InboundDAO> {
+        await this.mailService.sendMail(
+            req,
+            'Request Baru',
+            'Ada request baru nih dari toko? Apa tuch? Yuk dicek...'
+        );
         return this.repo.saveInbound(req, item.ToDAO());
     }
     async getInbounds(
@@ -68,7 +75,7 @@ class InboundService {
             throw InboundServiceError.INBOUND_ID_NOT_FOUND;
         }
 
-        let ok =
+        const ok =
             (item.status === InboundStatus.REQUESTING &&
                 (status === InboundStatus.ACCEPTED || status === InboundStatus.REJECTED)) ||
             (item.status === InboundStatus.ACCEPTED && status === InboundStatus.RECEIVED);

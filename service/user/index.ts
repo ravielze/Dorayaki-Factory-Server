@@ -15,6 +15,10 @@ import { Request } from 'express';
 class UserService {
     constructor(private readonly repo: UserRepository, private readonly config: Config) {}
 
+    async getAllEmail(req: Request): Promise<string[]> {
+        return this.repo.getAllEmail(req);
+    }
+
     validateToken(jwtToken: string): JwtPayload {
         try {
             const payload: JwtPayload = jwt.verify(jwtToken, this.config.jwtSecret, {

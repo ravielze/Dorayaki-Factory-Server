@@ -16,6 +16,10 @@ class Config {
     imgExpiration: string;
     apiKey: string;
     databaseQueryLog: boolean;
+    smtpHost: string;
+    smtpPort: number;
+    smtpUser: string;
+    smtpPass: string;
 
     constructor() {
         dotenv.config();
@@ -38,6 +42,14 @@ class Config {
             process.env.DB_QUERY_LOG = 'true';
         }
         this.databaseQueryLog = ParseBoolean(process.env.DB_QUERY_LOG);
+
+        this.smtpHost = process.env.SMTP_HOST || 'smtp.ethereal.email';
+        this.smtpPort = 587;
+        this.smtpUser = process.env.SMTP_AUTH_USER || '';
+        this.smtpPass = process.env.SMTP_AUTH_PASSWORD || '';
+        if (!this.smtpUser || !this.smtpPass) {
+            throw new Error('Environment Variables: SMTP User/Password is not set.');
+        }
     }
 }
 

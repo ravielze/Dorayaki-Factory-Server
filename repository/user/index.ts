@@ -20,6 +20,14 @@ class UserRepository extends BaseRepository<UserDAO> {
         });
     }
 
+    async getAllEmail(req: Request): Promise<string[]> {
+        const repo: Repository<UserDAO> = await this.getRepository(req, UserDAO);
+
+        const allUser: UserDAO[] = await repo.find({ select: ['email'] });
+
+        return allUser.map((u) => u.email);
+    }
+
     async getByID(req: Request, id: number): Promise<UserDAO | undefined> {
         const repo: Repository<UserDAO> = await this.getRepository(req, UserDAO);
         return repo.findOne({
