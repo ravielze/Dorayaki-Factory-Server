@@ -3,46 +3,41 @@ import { BaseModel } from '.';
 import { InboundStatus } from '../../common/inboundStatus';
 import { DorayakiDAO } from './dorayaki';
 
-@Entity({ name: "inbound" })
+@Entity({ name: 'inbound' })
 export class InboundDAO extends BaseModel {
-  @Column({
-    type: "varchar",
-    length: 2048,
-  })
-  note!: string
+    @Column({
+        type: 'varchar',
+        length: 2048,
+    })
+    note!: string;
 
-  @ManyToOne(() => DorayakiDAO, { nullable: false })
-  dorayaki!: DorayakiDAO
+    @ManyToOne(() => DorayakiDAO, { nullable: false })
+    dorayaki!: DorayakiDAO;
 
-  @Column({
-    type: "integer",
-    width: 16,
-  })
-  @Index("idx_inbound_amount")
-  amount!: number
+    @Column({
+        type: 'integer',
+        width: 16,
+    })
+    @Index('idx_inbound_amount')
+    amount!: number;
 
-  @Column({
-    type: "enum",
-    enum: InboundStatus,
-    default: InboundStatus.REQUESTING,
-  })
-  @Index("idx_inbound_status")
-  status!: InboundStatus
+    @Column({
+        type: 'enum',
+        enum: InboundStatus,
+        default: InboundStatus.REQUESTING,
+    })
+    @Index('idx_inbound_status')
+    status!: InboundStatus;
 
-  @Index("idx_inbound_created")
-  @CreateDateColumn({ name: "created_at" })
-  createdAt!: Date
+    @Index('idx_inbound_created')
+    @CreateDateColumn({ name: 'created_at' })
+    createdAt!: Date;
 
-  constructor(
-    dorayakiId: number,
-    note: string,
-    amount: number,
-    status: InboundStatus
-  ) {
-    super()
-    this.dorayaki = DorayakiDAO.FromID(dorayakiId)
-    this.note = note
-    this.amount = amount
-    this.status = status
-  }
+    constructor(dorayakiId: number, note: string, amount: number, status: InboundStatus) {
+        super();
+        this.dorayaki = DorayakiDAO.FromID(dorayakiId);
+        this.note = note;
+        this.amount = amount;
+        this.status = status;
+    }
 }
