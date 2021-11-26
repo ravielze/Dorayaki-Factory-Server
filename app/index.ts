@@ -7,7 +7,6 @@ import 'reflect-metadata';
 import DatabaseConnection from '../database';
 import Config from './config';
 import { ErrorMiddleware, RequestResponseManipulator } from './middleware';
-import MailService from '../service/mail';
 
 @Service()
 class App {
@@ -46,7 +45,6 @@ class App {
 
     async run() {
         await this.database.connect();
-        const s = Container.get(MailService);
         this.install();
         try {
             this.expressApplication?.listen(this.config.serverPort, (): void => {
